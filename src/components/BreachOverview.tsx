@@ -1,14 +1,14 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Timeline, Target, Calendar, AlertCircle } from "lucide-react";
+import { Clock, Target, Calendar, AlertCircle } from "lucide-react";
 
 export const BreachOverview = () => {
   return (
     <section className="space-y-6">
       <div className="bg-purple-50 border-l-4 border-purple-500 p-6 rounded-r-lg">
         <h2 className="text-2xl font-bold text-purple-900 mb-4 flex items-center">
-          <Timeline className="w-6 h-6 mr-2" />
+          <Clock className="w-6 h-6 mr-2" />
           Breach Campaign Overview
         </h2>
       </div>
