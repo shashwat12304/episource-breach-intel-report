@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ advisory.report_info.title }} | {{ advisory.report_info.company_name }}</title>
+    <meta name="description" content="{{ advisory.report_info.description }}" />
+    <meta name="author" content="{{ advisory.report_info.author }}" />
+    <meta property="og:title" content="{{ advisory.report_info.title }}" />
+    <meta property="og:description" content="{{ advisory.report_info.description }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="{{ advisory.report_info.og_image }}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="{{ advisory.report_info.og_image }}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen bg-gray-50">
+    <header class="bg-gradient-to-r from-purple-900 via-purple-800 to-red-900 text-white">
+      <div class="max-w-4xl mx-auto px-6 py-8">
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+              <span class="text-2xl font-bold text-white">∞</span>
+            </div>
+            <h1 class="text-3xl font-bold">{{ advisory.report_info.company_name }}</h1>
+          </div>
+          <div class="bg-white text-purple-900 px-6 py-2 rounded-lg font-bold text-lg">SECURITY ADVISORY</div>
+        </div>
+        <div class="text-center space-y-4">
+          <div class="flex items-center justify-center space-x-3 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a10 10 0 1010 10A10.011 10.011 0 0012 2z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6h4" />
+            </svg>
+          </div>
+          <h1 class="text-5xl font-bold text-white leading-tight">{{ advisory.report_info.title }}</h1>
+          <p class="text-xl text-purple-100 max-w-3xl mx-auto leading-relaxed">{{ advisory.report_info.description }}</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 text-center">
+          <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+            <div class="text-sm text-purple-200 uppercase tracking-wide mb-1">Report ID</div>
+            <div class="text-white font-mono text-sm">{{ advisory.report_info.report_id }}</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+            <div class="text-sm text-purple-200 uppercase tracking-wide mb-1">Created</div>
+            <div class="text-white font-mono text-sm">{{ advisory.report_info.created_timestamp.strftime("%Y-%m-%d") }}</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+            <div class="text-sm text-purple-200 uppercase tracking-wide mb-1">Threat Actor</div>
+            <div class="text-white font-mono text-sm">{{ advisory.threat_actor.actor_name }}</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+            <div class="text-sm text-purple-200 uppercase tracking-wide mb-1">Classification</div>
+            <div class="text-red-400 font-bold text-sm flex items-center justify-center">{{ advisory.report_info.classification }}</div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="max-w-4xl mx-auto px-6 py-8 space-y-8">
+      <section class="space-y-6">
+        <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg">
+          <h2 class="text-2xl font-bold text-red-900 mb-4 flex items-center">Executive Summary</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {% for card in advisory.executive_summary.cards %}
+          <div class="border-l-4 bg-white rounded shadow p-4">
+            <div class="text-gray-600 text-sm font-medium mb-1">{{ card.label }}</div>
+            <div class="text-2xl font-bold">{{ card.value }}</div>
+            {% if card.tagline %}<p class="text-xs text-gray-500 mt-1">{{ card.tagline }}</p>{% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        <div class="bg-white rounded shadow p-6 space-y-4">
+          <h3 class="text-lg font-bold mb-2">Overview</h3>
+          <p class="text-gray-700 leading-relaxed">{{ advisory.executive_summary.overview }}</p>
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold mb-3">Key Findings</h4>
+            <ul class="space-y-2 text-sm list-disc list-inside">
+              {% for finding in advisory.executive_summary.key_findings %}
+              <li><strong>{{ finding.title }}:</strong> {{ finding.description }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+      <section class="space-y-6">
+        <div class="bg-purple-50 border-l-4 border-purple-500 p-6 rounded-r-lg">
+          <h2 class="text-2xl font-bold text-purple-900 mb-4 flex items-center">Breach Campaign Overview</h2>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded shadow p-6 space-y-4">
+            <h3 class="text-lg font-bold flex items-center mb-2">Campaign Details</h3>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Campaign Name</h4>
+              <p class="font-mono text-sm bg-gray-100 p-2 rounded">{{ advisory.campaign.campaign_name }}</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Timeline</h4>
+              <ul class="text-sm space-y-1">
+                <li><strong>Breach Window:</strong> {{ advisory.campaign.timeline.breach_start.strftime("%B %d, %Y") }} - {{ advisory.campaign.timeline.breach_end.strftime("%B %d, %Y") }}</li>
+                <li><strong>Public Notification:</strong> {{ advisory.campaign.timeline.public_notification.strftime("%B %d, %Y") }}</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Primary Targets</h4>
+              <ul class="text-sm space-y-1 list-disc list-inside">
+                {% for target in advisory.campaign.primary_targets %}
+                <li>{{ target }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="bg-white rounded shadow p-6 space-y-4">
+            <h3 class="text-lg font-bold flex items-center mb-2">Healthcare Breach Landscape</h3>
+            <p class="text-sm text-gray-700">{{ advisory.landscape.overview }}</p>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">2024-2025 Statistics</h4>
+              <div class="grid grid-cols-2 gap-4 text-sm">
+                <div class="bg-red-50 p-3 rounded">
+                  <div class="font-bold text-red-900">{{ advisory.landscape.total_incidents }}</div>
+                  <div class="text-red-700">Total Incidents</div>
+                </div>
+                <div class="bg-orange-50 p-3 rounded">
+                  <div class="font-bold text-orange-900">{{ advisory.landscape.confirmed_disclosures }}</div>
+                  <div class="text-orange-700">Confirmed Disclosures</div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Top Breaches (2024-2025)</h4>
+              <ul class="text-sm space-y-1 list-disc list-inside">
+                {% for breach in advisory.landscape.top_breaches %}
+                <li>{% if breach.is_featured %}<strong>{{ breach.name }}: {{ breach.individuals }} ({{ breach.year }})</strong>{% else %}{{ breach.name }}: {{ breach.individuals }} ({{ breach.year }}){% endif %}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded shadow p-6">
+          <h3 class="text-lg font-bold mb-4">Threat Actor Attribution</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Actor Profile</h4>
+              <div class="space-y-2 text-sm">
+                <div><strong>Name:</strong> {{ advisory.threat_actor.actor_name }}</div>
+                <div><strong>Attribution:</strong> {{ advisory.threat_actor.attribution }}</div>
+                <div><strong>Motivation:</strong> {{ advisory.threat_actor.motivation }}</div>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Attack Techniques</h4>
+              <ul class="text-sm space-y-1 list-disc list-inside">
+                {% for tech in advisory.threat_actor.attack_techniques %}
+                <li>{{ tech }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">MITRE ATT&CK Tactics</h4>
+              <div class="flex flex-wrap gap-1 text-xs">
+                {% for tactic in advisory.threat_actor.mitre_tactics %}
+                <span class="px-2 py-1 bg-gray-100 rounded">{{ tactic }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="space-y-6">
+        <div class="bg-orange-50 border-l-4 border-orange-500 p-6 rounded-r-lg">
+          <h2 class="text-2xl font-bold text-orange-900 mb-4 flex items-center">Technical Analysis & Indicators</h2>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded shadow p-6 space-y-4">
+            <h3 class="text-lg font-bold flex items-center mb-2">Indicators of Compromise (IOCs)</h3>
+            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-sm">
+              <div class="font-semibold text-yellow-800 mb-2">{{ advisory.technical.iocs.title }}</div>
+              <p>{{ advisory.technical.iocs.description }}</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Behavioral Indicators</h4>
+              <ul class="text-sm space-y-2 list-disc list-inside">
+                {% for indicator in advisory.technical.iocs.behavioral_indicators %}
+                <li>{{ indicator }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Data Exfiltration Patterns</h4>
+              <div class="bg-red-50 p-3 rounded border-l-4 border-red-500">
+                <ul class="text-sm space-y-1 list-disc list-inside">
+                  {% for pattern in advisory.technical.iocs.exfiltration_patterns %}
+                  <li>{{ pattern }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded shadow p-6 space-y-4">
+            <h3 class="text-lg font-bold flex items-center mb-2">Malware & Vulnerabilities</h3>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Malware Analysis</h4>
+              <div class="bg-gray-50 p-4 rounded">
+                <div class="flex items-center mb-2 text-sm"><span class="mr-2">Family:</span> <span class="font-mono">{{ advisory.technical.malware.family }}</span></div>
+                <p class="text-sm text-gray-700">{{ advisory.technical.malware.description }}</p>
+              </div>
+            </div>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Attack Progression</h4>
+              <div class="space-y-3">
+                {% for step in advisory.technical.progression %}
+                <div class="flex items-center text-sm">
+                  <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 font-bold mr-3">{{ step.step }}</div>
+                  <div>
+                    <div class="font-semibold">{{ step.name }}</div>
+                    <div class="text-gray-600">{{ step.description }}</div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded shadow p-6">
+          <h3 class="text-lg font-bold mb-4">Compromised Data Categories</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for category in advisory.compromised_categories %}
+            <div class="bg-red-50 border border-red-200 p-4 rounded-lg">
+              <h4 class="font-semibold text-red-800 mb-2">{{ category.category_name }}</h4>
+              <ul class="text-sm text-red-700 space-y-1 list-disc list-inside">
+                {% for item in category.items %}
+                <li>{{ item }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+      <section class="space-y-6">
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+          <h2 class="text-2xl font-bold text-blue-900 mb-4 flex items-center">Impact Assessment & Compliance</h2>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded shadow p-6 space-y-4">
+            <h3 class="text-lg font-bold flex items-center mb-2">Sectoral Impact</h3>
+            <p class="text-sm text-gray-700">{{ advisory.impact.description }}</p>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-3">Impacted Sectors</h4>
+              <div class="space-y-3">
+                {% for sector in advisory.impact.sectors %}
+                <div>
+                  <div class="flex justify-between items-center mb-1 text-sm font-medium">
+                    <span>{{ sector.sector }}</span>
+                    <span class="text-gray-600">{{ sector.impact_level }}</span>
+                  </div>
+                  {% if sector.impact_percent %}
+                  <div class="w-full bg-gray-200 rounded h-2"><div class="bg-blue-600 h-2 rounded" style="width:{{ sector.impact_percent }}%"></div></div>
+                  {% endif %}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Geographic Distribution</h4>
+              <div class="text-center border border-gray-300 rounded py-2 text-sm">{{ advisory.impact.geographic_distribution }}</div>
+            </div>
+          </div>
+          <div class="bg-white rounded shadow p-6 space-y-4">
+            <h3 class="text-lg font-bold flex items-center mb-2">Regulatory Compliance</h3>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Applicable Regulations</h4>
+              <ul class="space-y-2 text-sm list-disc list-inside">
+                {% for reg in advisory.compliance.applicable_regulations %}
+                <li>{{ reg }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-sm text-gray-600 mb-2">Compliance Gaps Identified</h4>
+              <ul class="text-sm space-y-2 list-disc list-inside">
+                {% for gap in advisory.compliance.compliance_gaps %}
+                <li>{{ gap }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="bg-white rounded shadow p-6 space-y-3 text-center">
+            <div class="text-3xl font-bold text-green-600">{{ advisory.cost_stats.average_cost }}</div>
+            <div class="text-sm text-gray-600">{{ advisory.cost_stats.source }}</div>
+            <div class="text-xs text-gray-500">{{ advisory.cost_stats.note }}</div>
+          </div>
+          <div class="bg-white rounded shadow p-6 space-y-3">
+            <h4 class="font-semibold text-sm text-gray-600 mb-2">Affected Partners</h4>
+            <ul class="text-sm space-y-1 list-disc list-inside">
+              {% for partner in advisory.affected_partners %}
+              <li>{{ partner }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="bg-white rounded shadow p-6 space-y-3">
+            <div class="bg-green-50 border border-green-200 p-3 rounded text-sm text-center">
+              <div class="font-semibold text-green-800 mb-1">{{ advisory.dark_web.title }}</div>
+              <div class="text-xs text-green-700">{{ advisory.dark_web.description }}</div>
+            </div>
+            <div class="text-xs text-gray-500 text-center">{{ advisory.dark_web.monitoring_note }}</div>
+          </div>
+        </div>
+      </section>
+      <section class="space-y-6">
+        <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
+          <h2 class="text-2xl font-bold text-green-900 mb-4 flex items-center">Mitigation Recommendations</h2>
+        </div>
+        <div class="bg-white rounded shadow p-6">
+          <h3 class="text-lg font-bold mb-2">Strategic Recommendations Overview</h3>
+          <p class="text-gray-700 mb-4">{{ advisory.mitigation.overview }}</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="text-center bg-red-50 p-4 rounded-lg">
+              <div class="text-2xl font-bold text-red-600">{{ advisory.mitigation.counts.critical_high }}</div>
+              <div class="text-sm text-red-700">Critical & High Priority</div>
+            </div>
+            <div class="text-center bg-yellow-50 p-4 rounded-lg">
+              <div class="text-2xl font-bold text-yellow-600">{{ advisory.mitigation.counts.immediate_action }}</div>
+              <div class="text-sm text-yellow-700">Immediate Action Required</div>
+            </div>
+            <div class="text-center bg-green-50 p-4 rounded-lg">
+              <div class="text-2xl font-bold text-green-600">{{ advisory.mitigation.counts.implementation_target }}</div>
+              <div class="text-sm text-green-700">Implementation Target</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Recommendation Cards -->
+          {% for rec in advisory.mitigation.recommendations %}
+          <div class="bg-white rounded shadow p-6 space-y-3 border-l-4 border-l-red-500">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="text-lg font-bold flex items-center">{{ rec.title }}</h4>
+              <span class="px-2 py-1 bg-red-500 text-white text-xs rounded">{{ rec.priority }}</span>
+            </div>
+            <p class="text-sm text-gray-700">{{ rec.description }}</p>
+            <div class="flex justify-between items-center pt-2 border-t text-xs text-gray-600">
+              <span><strong>Timeline:</strong> {{ rec.timeline }}</span>
+              <span><strong>Effort:</strong> {{ rec.effort }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="bg-white rounded shadow p-6 space-y-4">
+          <h3 class="text-lg font-bold mb-2">Implementation Roadmap</h3>
+          <div class="space-y-4">
+            {% for phase in advisory.mitigation.roadmap %}
+            <div class="bg-red-50 border border-red-200 p-4 rounded-lg">
+              <h4 class="font-semibold text-red-800 mb-2">{{ phase.phase_name }} ({{ phase.timeframe }})</h4>
+              <ul class="text-sm text-red-700 space-y-1 list-disc list-inside">
+                {% for action in phase.actions %}
+                <li>{{ action }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="bg-gray-900 text-white mt-16">
+      <div class="max-w-4xl mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-xl font-bold mb-4 flex items-center">Report Information</h3>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center"><span class="mr-2 text-xs px-1 py-0.5 border border-gray-500 rounded">ID</span><span class="font-mono">{{ advisory.report_info.report_id }}</span></div>
+              <div class="flex items-center"><span class="mr-2 text-xs px-1 py-0.5 border border-gray-500 rounded">Version</span><span>{{ advisory.report_info.version }}</span></div>
+              <div class="flex items-center"><span class="mr-2 text-xs px-1 py-0.5 border border-gray-500 rounded">Created</span><span>{{ advisory.report_info.created_timestamp.isoformat() }}</span></div>
+              <div class="flex items-center"><span class="mr-2 text-xs px-1 py-0.5 border border-gray-500 rounded">Modified</span><span>{{ advisory.report_info.modified_timestamp.isoformat() }}</span></div>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-4 flex items-center">References & Sources</h3>
+            <div class="space-y-2 text-sm">
+              {% for ref in advisory.references %}
+              <div><a href="{{ ref.url }}" target="_blank" class="text-blue-300 hover:text-blue-100">{{ ref.name }}</a></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-6">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center"><span class="text-lg font-bold">∞</span></div>
+              <span class="text-xl font-bold">{{ advisory.report_info.company_name }}</span>
+            </div>
+            <div class="flex items-center text-sm text-gray-400"><span class="mr-2">Published {{ advisory.report_info.published_date.strftime("%B %d, %Y") }}</span></div>
+          </div>
+          <div class="mt-4 text-center text-xs text-gray-500">{{ advisory.disclaimer }}</div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
