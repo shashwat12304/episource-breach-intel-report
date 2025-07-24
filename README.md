@@ -60,6 +60,13 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Static HTML report
+
+The repository includes a fully self-contained HTML version of the
+report. Open `single-report-template.html` in any browser to view the
+same content rendered by the React application without running any
+build steps.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/4354bd44-3a93-4c23-a223-eff813c0acb1) and click on Share -> Publish.
